@@ -39,6 +39,7 @@ static zend_object_handlers lua_closure_handlers;
 /** {{{ ARG_INFO
  *
  */
+ZEND_BEGIN_ARG_INFO(arginfo_lua_ctor, 0) ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(arginfo_lua_invoke, 0, 0, 1)
 	ZEND_ARG_INFO(0, arg)
 	ZEND_ARG_INFO(0, ...)
@@ -145,7 +146,7 @@ PHP_METHOD(lua_closure, invoke) {
 /* {{{ lua_class_methods[]
  */
 zend_function_entry lua_closure_methods[] = {
-	PHP_ME(lua_closure, __construct,		NULL,  					ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
+	PHP_ME(lua_closure, __construct, arginfo_lua_ctor, ZEND_ACC_PRIVATE|ZEND_ACC_CTOR)
 	PHP_ME(lua_closure, invoke,				arginfo_lua_invoke,  	ZEND_ACC_PUBLIC)
 	PHP_MALIAS(lua_closure, __invoke, invoke, arginfo_lua_invoke,	ZEND_ACC_PUBLIC)
 	PHP_FE_END

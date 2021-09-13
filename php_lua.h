@@ -63,6 +63,7 @@ static inline php_lua_object *php_lua_obj_from_obj(zend_object *obj) {
 
 #define Z_LUAVAL(obj)   php_lua_obj_from_obj(Z_OBJ((obj)))
 #define Z_LUAVAL_P(obj) php_lua_obj_from_obj(Z_OBJ_P((obj)))
+#define Z_LUAVAL_O(obj) php_lua_obj_from_obj(obj)
 
 zval *php_lua_get_zval_from_lua(lua_State *L, int index, zval *lua_obj, zval *rv);
 int php_lua_send_zval_to_lua(lua_State *L, zval *val);

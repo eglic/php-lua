@@ -4,18 +4,16 @@ $br = (php_sapi_name() == "cli")? "":"<br>";
 if(!extension_loaded('lua')) {
 	dl('lua.' . PHP_SHLIB_SUFFIX);
 }
-$module = 'lua';
-$functions = get_extension_funcs($module);
-echo "Functions available in the test extension:$br\n";
-foreach($functions as $func) {
-    echo $func."$br\n";
-}
-echo "$br\n";
-$function = 'confirm_' . $module . '_compiled';
-if (extension_loaded($module)) {
-	$str = $function($module);
-} else {
-	$str = "Module $module is not compiled into PHP";
-}
-echo "$str\n";
-?>
+$lua = new \Lua();
+$lua->eval(
+	"PLUGIN_NAME = 'test'\n" .
+	"function getPluginInfo()\n" .
+	"	return {name = 'test'}\n" .
+	"end\n" .
+	"print 'Hello,World'"
+);
+var_dump($lua);
+var_dump($lua->call('getPluginInfo'));
+var_dump($lua->PLUGIN_NAME);
+$lua->PLUGIN_NAME = 'hello';
+var_dump($lua->PLUGIN_NAME);

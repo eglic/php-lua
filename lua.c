@@ -35,6 +35,9 @@ static zend_object_handlers lua_object_handlers;
 /** {{{ ARG_INFO
  *
  */
+ZEND_BEGIN_ARG_INFO(arginfo_lua_ctor, 0) ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO(arginfo_lua_ver, IS_STRING,0) ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_lua_call, 0, 0, 2)
 	ZEND_ARG_INFO(0, method)
 	ZEND_ARG_INFO(0, args)
@@ -211,22 +214,19 @@ zend_object *php_lua_create_object(zend_class_entry *ce)
 
 /** {{{ static zval * php_lua_read_property(zval *object, zval *member, int type)
 */
-zval *php_lua_read_property(zval *object, zval *member, int type, void **cache_slot, zval *rv){
-	lua_State *L = (Z_LUAVAL_P(object))->L;
-	zend_string *str_member;
+zval* php_lua_read_property( zend_object *object , zend_string *member , int type , void **cache_slot , zval *rv ) {
+	lua_State *L = ( Z_LUAVAL_O( object ) )->L;
 
 	if (type != BP_VAR_R) {
 		ZVAL_NULL(rv);
 		return rv;
 	}
 
-	str_member = zval_get_string(member);
 #if (LUA_VERSION_NUM < 502)
-	lua_getfield(L, LUA_GLOBALSINDEX, ZSTR_VAL(str_member));
+	lua_getfield(L, LUA_GLOBALSINDEX, member->val);
 #else
-	lua_getglobal(L, ZSTR_VAL(str_member));
+	lua_getglobal( L , member->val );
 #endif
-	zend_string_release(str_member);
 
 	php_lua_get_zval_from_lua(L, -1, object, rv);
 	lua_pop(L, 1);
@@ -236,9 +236,8 @@ zval *php_lua_read_property(zval *object, zval *member, int type, void **cache_s
 
 /** {{{ static void php_lua_write_property(zval *object, zval *member, zval *value)
 */
-static void php_lua_write_property(zval *object, zval *member, zval *value, void ** key) {
-	lua_State *L = (Z_LUAVAL_P(object))->L;
-	zend_string *str_member = zval_get_string(member);
+static void php_lua_write_property( zend_object *object , zend_string *member , zval *value , void **key ) {
+	lua_State *L = ( Z_LUAVAL_O( object ) )->L;
 
 #if (LUA_VERSION_NUM < 502)
 	php_lua_send_zval_to_lua(L, member);
@@ -247,10 +246,9 @@ static void php_lua_write_property(zval *object, zval *member, zval *value, void
 	lua_settable(L, LUA_GLOBALSINDEX);
 #else
 	php_lua_send_zval_to_lua(L, value);
-	lua_setglobal(L, Z_STRVAL_P(member));
+	lua_setglobal( L , member->val );
 #endif
 
-	zend_string_release(str_member);
 }
 /* }}} */
 
@@ -817,12 +815,12 @@ PHP_METHOD(lua, __construct) {
  *
  */
 zend_function_entry lua_class_methods[] = {
-	PHP_ME(lua, __construct,		NULL,  					ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
+	PHP_ME(lua, __construct, arginfo_lua_ctor, ZEND_ACC_PUBLIC|ZEND_ACC_CTOR)
 	PHP_ME(lua, eval,          		arginfo_lua_eval,  		ZEND_ACC_PUBLIC)
 	PHP_ME(lua, include,			arginfo_lua_include, 	ZEND_ACC_PUBLIC)
 	PHP_ME(lua, call,				arginfo_lua_call,  		ZEND_ACC_PUBLIC)
 	PHP_ME(lua, assign,				arginfo_lua_assign,		ZEND_ACC_PUBLIC)
-	PHP_ME(lua, getVersion,			NULL, 					ZEND_ACC_PUBLIC|ZEND_ACC_ALLOW_STATIC)
+PHP_ME(lua, getVersion, arginfo_lua_ver, ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 	PHP_ME(lua, registerCallback,	arginfo_lua_register, 	ZEND_ACC_PUBLIC)
 	PHP_MALIAS(lua, __call, call, 	arginfo_lua_call,		ZEND_ACC_PUBLIC)
 	PHP_FE_END
