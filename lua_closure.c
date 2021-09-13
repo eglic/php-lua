@@ -48,14 +48,14 @@ ZEND_END_ARG_INFO()
 
 /** {{{ zval * php_lua_closure_instance(zval *instance, long ref_id, zval *lua_obj)
  */
-zval* php_lua_closure_instance(zval *instance, long ref_id, zval *lua_obj) {
+zval* php_lua_closure_instance( zval *instance , long ref_id , zend_object *lua_obj ) {
 	lua_closure_object *objval;
 
 	object_init_ex(instance, lua_closure_ce);
 	objval = php_lua_closure_object_from_zend_object(Z_OBJ_P(instance));
 	objval->closure = ref_id;
 	if (lua_obj) {
-		ZVAL_ZVAL(&(objval->lua), lua_obj, 1, 0);
+		ZVAL_OBJ( &( objval->lua ) , lua_obj );
 	}
 
 	return instance;

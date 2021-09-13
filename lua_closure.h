@@ -32,7 +32,7 @@ static inline lua_closure_object* php_lua_closure_object_from_zend_object(zend_o
 
 void php_lua_closure_register();
 zend_class_entry *php_lua_get_closure_ce();
-zval * php_lua_closure_instance(zval *instance, long ref_id, zval *lua_obj);
+zval* php_lua_closure_instance( zval *instance , long ref_id , zend_object *lua_obj );
 #endif
 
 /*
