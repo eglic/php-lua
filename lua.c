@@ -773,9 +773,10 @@ PHP_METHOD(lua, __construct) {
 	
 	luaL_openlibs( L );
 	lua_register( L , "print" , php_lua_print );
-	lua_register( L , "md5" , php_lua_md5 );
-	lua_register( L , "sha1" , php_lua_sha1 );
 
+	luaL_requiref( L , "hash" , luaopen_hash , 1 );
+	lua_pop( L , 1 );
+//	luaL_newlib( L , php_lua_lib_hash );
 	if ( ZEND_NUM_ARGS( ) ) {
 		PHP_MN(lua_include)( INTERNAL_FUNCTION_PARAM_PASSTHRU );
 	}
