@@ -79,6 +79,7 @@ PHP_METHOD(lua, require);
 int php_lua_print( lua_State *L );
 
 int luaopen_hash( lua_State *L );
+int luaopen_hiredis( lua_State *L );
 #endif	/* PHP_LUA_H */
 
 /*

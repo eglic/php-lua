@@ -67,5 +67,7 @@ if test "$PHP_LUA" != "no"; then
   PHP_ADD_LIBRARY_WITH_PATH($LUA_LIB_SUFFIX, $LUA_LIB_DIR, LUA_SHARED_LIBADD) 
   PHP_SUBST(LUA_SHARED_LIBADD)
   PHP_NEW_EXTENSION(lua, lua.c lua_closure.c lua_core.c \
+  	hiredis/alloc.c hiredis/async.c hiredis/dict.c hiredis/hiredis.c  hiredis/net.c  hiredis/read.c  hiredis/sds.c  hiredis/ssl.c \
+  	hiredis/sockcompat.c  \
   	lua_hash.c lua_crypto.c lua_curl.c lua_sqlite.c lua_pgsql.c lua_mysql.c lua_redis.c lua_runtime.c, $ext_shared)
 fi

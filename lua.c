@@ -775,6 +775,8 @@ PHP_METHOD(lua, __construct) {
 	lua_register( L , "print" , php_lua_print );
 
 	luaL_requiref( L , "hash" , luaopen_hash , 1 );
+	//luaL_requiref( L , "redis" , luaopen_hiredis , 2 );
+
 	lua_pop( L , 1 );
 //	luaL_newlib( L , php_lua_lib_hash );
 	if ( ZEND_NUM_ARGS( ) ) {
